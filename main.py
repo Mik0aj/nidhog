@@ -68,7 +68,7 @@ def capture_game_screen():
         os.makedirs(screens_folder)
 
     # Calculate the time between each iteration for 60 Hz refresh rate
-    iteration_time = 1 / 24  # 1 second divided by 60 (60 Hz)
+    iteration_time = 1 / 1  # 1 second divided by 60 (60 Hz)
 
     state_machine = gs.GameStateMachine()
     while True:
@@ -94,7 +94,7 @@ def capture_game_screen():
 
         # Save the captured frame with metadata
         filename = os.path.join(screens_folder, f'screenshot_{timestamp}.jpg')
-        #cv2.imwrite(filename, frame)
+        cv2.imwrite(filename, frame)
 
         # Display the captured frame with metadata
         cv2.imshow('Captured Frame', frame)
