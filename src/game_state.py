@@ -79,6 +79,7 @@ def check_if_all_pixels_white(image, mask, threshold=245, mode='average'):
         value = np.min(masked_image[masked_region])
     else:
         raise ValueError("Invalid mode specified. Mode must be either 'average' or 'min'.")
+
     # print(f"Value used for check: {value}")
     # # Display the image
     # cv2.imshow('Masked Image', masked_image)
