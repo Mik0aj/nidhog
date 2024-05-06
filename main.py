@@ -139,7 +139,6 @@ def save_screenshot_with_metadata(frame):
     filename = os.path.join('screens', f'screenshot_{timestamp}_{keys_str}.jpg')
     cv2.imwrite(filename, frame)
 
-
 def on_press(key):
     """Callback function for key press event."""
     print(f'{key} pressed.')
