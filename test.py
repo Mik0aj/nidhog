@@ -4,6 +4,7 @@ import cv2
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 import src.game_state as game_state
+import src.game_menu_state_machine as game_menu_state_machine
 
 # Directory of the script
 SCRIPT_DIR = os.path.dirname((os.path.abspath(__file__)))
@@ -97,6 +98,40 @@ class TestCheckIfAllPixelsWhite(unittest.TestCase):
         mask = cv2.imread(game_state.SINGLE_PLAYER_BEGIN_MASK_TWO)
         result = game_state.check_if_all_pixels_white(image, mask, 165)
         self.assertTrue(result, "Expected result to be True")
+
+
+class TestStateMachine(unittest.TestCase):
+    def test_start_screen(self):
+        start_screen = game_menu_state_machine.StartScreen()
+        # Ensure that entering the StartScreen returns a MainMenu instance
+        self.assertIsInstance(start_screen.enter(), game_menu_state_machine.MainMenu)
+
+    def test_main_menu_navigation(self):
+        main_menu = game_menu_state_machine.MainMenu()
+        # Test navigation using 'w' key
+        main_menu.w()
+        self.assertEqual(main_menu.current_menu_item, 1)
+
+        # Test navigation using 's' key
+        main_menu.s()
+        self.assertEqual(main_menu.current_menu_item, 0)
+
+        # Test navigation wrapping around
+        main_menu.s()
+        self.assertEqual(main_menu.current_menu_item, len(main_menu.menu_items) - 1)
+
+    def test_start_screen_to_single_player(self):
+            # Start with the StartScreen
+            current_state = game_menu_state_machine.StartScreen()
+
+            # Enter the StartScreen, which should transition to the MainMenu
+            current_state = current_state.enter()
+            self.assertIsInstance(current_state, game_menu_state_machine.MainMenu)
+
+            # Navigate to SinglePlayer from MainMenu
+            current_state.current_menu_item = 6  # Assuming SinglePlayer is at index 6
+            current_state = current_state.enter()
+            self.assertIsInstance(current_state, game_menu_state_machine.SinglePlayer)
 
 
 if __name__ == '__main__':
