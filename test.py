@@ -110,7 +110,7 @@ class TestStateMachine(unittest.TestCase):
         main_menu = game_menu_state_machine.MainMenu()
         # Test navigation using 'w' key
         main_menu.w()
-        self.assertEqual(main_menu.current_menu_item, 1)
+        self.assertEqual(main_menu.current_menu_item, 6)
 
         # Test navigation using 's' key
         main_menu.s()
@@ -118,7 +118,7 @@ class TestStateMachine(unittest.TestCase):
 
         # Test navigation wrapping around
         main_menu.s()
-        self.assertEqual(main_menu.current_menu_item, len(main_menu.menu_items) - 1)
+        self.assertEqual(main_menu.current_menu_item, 1)
 
     def test_start_screen_to_single_player(self):
             # Start with the StartScreen
@@ -129,10 +129,53 @@ class TestStateMachine(unittest.TestCase):
             self.assertIsInstance(current_state, game_menu_state_machine.MainMenu)
 
             # Navigate to SinglePlayer from MainMenu
-            current_state.current_menu_item = 6  # Assuming SinglePlayer is at index 6
+            current_state.w()
             current_state = current_state.enter()
             self.assertIsInstance(current_state, game_menu_state_machine.SinglePlayer)
 
+    def test_transitions_between_states_Startscreen_to_Multiplayer(self):
+            current_state = game_menu_state_machine.StartScreen()
+            expected_result = [
+            game_menu_state_machine.MainMenu(),
+            game_menu_state_machine.Multiplayer(),
+        ]
+            result = current_state.get_transitions_to_state(game_menu_state_machine.Multiplayer())
+            result_types = [type(state) for state in result]
+            expected_result_types = [type(state) for state in expected_result]
+            self.assertListEqual(result_types,expected_result_types,"The result array does not match the expected result array")
+
+    def test_transitions_between_states_Startscreen_to_OfflineVersus(self):
+            current_state = game_menu_state_machine.StartScreen()
+            expected_result = [
+            game_menu_state_machine.MainMenu(),
+            game_menu_state_machine.Multiplayer(),
+            game_menu_state_machine.OfflineVersus()
+        ]
+            result = current_state.get_transitions_to_state(game_menu_state_machine.OfflineVersus())
+            result_types = [type(state) for state in result]
+            expected_result_types = [type(state) for state in expected_result]
+            self.assertListEqual(result_types,expected_result_types,"The result array does not match the expected result array")
+
+    def test_transitions_between_states_Startscreen_to_SinglePlayer(self):
+            current_state = game_menu_state_machine.StartScreen()
+            expected_result = [
+            game_menu_state_machine.MainMenu(),
+            game_menu_state_machine.SinglePlayer(),
+        ]
+            result = current_state.get_transitions_to_state(game_menu_state_machine.SinglePlayer())
+            result_types = [type(state) for state in result]
+            expected_result_types = [type(state) for state in expected_result]
+            self.assertListEqual(result_types,expected_result_types,"The result array does not match the expected result array")
+
+    def test_transitions_if_state_is_not_found(self):
+            current_state = game_menu_state_machine.StartScreen()
+            expected_result = [
+            game_menu_state_machine.MainMenu(),
+        ]
+            result = current_state.get_transitions_to_state(game_menu_state_machine.Begin())
+            result_types = [type(state) for state in result]
+            expected_result_types = [type(state) for state in expected_result]
+            self.assertListEqual(result_types,expected_result_types,"The result array does not match the expected result array")
 
 if __name__ == '__main__':
     unittest.main()
