@@ -76,6 +76,25 @@ class MenuState(State):
         self.next_state = self.menu_items[self.current_menu_item]
         return self.next_state
     
+    def select_item(self, target_state):
+        current_pos = self.current_menu_item
+        target_pos = [type(item) for item in self.menu_items].index(type(target_state))
+        total_items = len(self.menu_items)
+
+        if current_pos == target_pos:
+            return []
+
+        # Calculate the distance in both directions
+        distance_cw = (target_pos - current_pos) % total_items
+        distance_ccw = (current_pos - target_pos) % total_items
+
+        # Choose the direction with the shorter distance
+        if distance_cw <= distance_ccw:
+            return [self.s] * distance_cw
+        else:
+            return [self.w] * distance_ccw
+        
+    
     def get_transitions_to_state(self, state):
         transitions = []
         for menu_item in self.menu_items:

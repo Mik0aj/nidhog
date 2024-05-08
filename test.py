@@ -177,5 +177,23 @@ class TestStateMachine(unittest.TestCase):
             expected_result_types = [type(state) for state in expected_result]
             self.assertListEqual(result_types,expected_result_types,"The result array does not match the expected result array")
 
+    def test_select_item_using_w(self):
+            current_state = game_menu_state_machine.MainMenu()
+            result = current_state.select_item(game_menu_state_machine.SinglePlayer())
+            expected_result = [current_state.w]  # Array containing the w function
+            self.assertEqual(result, expected_result)
+    
+    def test_select_item_using_s(self):
+            current_state = game_menu_state_machine.MainMenu()
+            result = current_state.select_item(game_menu_state_machine.Tournament())
+            expected_result = [current_state.s]  # Array containing the w function
+            self.assertEqual(result, expected_result)
+
+    def test_select_item_using_s_multiple_menu_changes(self):
+            current_state = game_menu_state_machine.MainMenu()
+            result = current_state.select_item(game_menu_state_machine.Options())
+            expected_result = [current_state.s,current_state.s]  # Array containing the w function
+            self.assertEqual(result, expected_result)  
+               
 if __name__ == '__main__':
     unittest.main()
