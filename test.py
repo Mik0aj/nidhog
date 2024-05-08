@@ -1,5 +1,6 @@
 import os
 import unittest
+from unittest.mock import MagicMock
 import cv2
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
@@ -178,22 +179,40 @@ class TestStateMachine(unittest.TestCase):
             self.assertListEqual(result_types,expected_result_types,"The result array does not match the expected result array")
 
     def test_select_item_using_w(self):
-            current_state = game_menu_state_machine.MainMenu()
-            result = current_state.select_item(game_menu_state_machine.SinglePlayer())
-            expected_result = [current_state.w]  # Array containing the w function
-            self.assertEqual(result, expected_result)
-    
+        current_state = game_menu_state_machine.MainMenu()
+        # Mock the 'w' function in the current state
+        current_state.w = MagicMock()
+        result = current_state.select_item(game_menu_state_machine.SinglePlayer())
+        expected_result = [current_state.w]
+        self.assertEqual(result, expected_result)
+        for func in result:
+            func()
+        # Assert that the mocked 'w' function is called once
+        current_state.w.assert_called_once()
+
     def test_select_item_using_s(self):
-            current_state = game_menu_state_machine.MainMenu()
-            result = current_state.select_item(game_menu_state_machine.Tournament())
-            expected_result = [current_state.s]  # Array containing the w function
-            self.assertEqual(result, expected_result)
+        current_state = game_menu_state_machine.MainMenu()
+        # Mock the 's' function in the current state
+        current_state.s = MagicMock()
+        result = current_state.select_item(game_menu_state_machine.Tournament())
+        expected_result = [current_state.s]
+        self.assertEqual(result, expected_result)
+        for func in result:
+            func()
+        # Assert that the mocked 's' function is called once
+        current_state.s.assert_called_once()
 
     def test_select_item_using_s_multiple_menu_changes(self):
-            current_state = game_menu_state_machine.MainMenu()
-            result = current_state.select_item(game_menu_state_machine.Options())
-            expected_result = [current_state.s,current_state.s]  # Array containing the w function
-            self.assertEqual(result, expected_result)  
-               
+        current_state = game_menu_state_machine.MainMenu()
+        # Mock the 's' function in the current state
+        current_state.s = MagicMock()
+        result = current_state.select_item(game_menu_state_machine.Options())
+        expected_result = [current_state.s, current_state.s]
+        self.assertEqual(result, expected_result)
+        for func in result:
+            func()
+        # Assert that the mocked 's' function is called twice
+        self.assertEqual(current_state.s.call_count, 2)
+        
 if __name__ == '__main__':
     unittest.main()
