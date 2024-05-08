@@ -85,14 +85,14 @@ class MenuState(State):
             return []
 
         # Calculate the distance in both directions
-        distance_cw = (target_pos - current_pos) % total_items
-        distance_ccw = (current_pos - target_pos) % total_items
+        distance_down = (target_pos - current_pos) % total_items
+        distance_up = (current_pos - target_pos) % total_items
 
         # Choose the direction with the shorter distance
-        if distance_cw <= distance_ccw:
-            return [self.s] * distance_cw
+        if distance_up <= distance_down:
+            return [self.w] * distance_up
         else:
-            return [self.w] * distance_ccw
+            return [self.s] * distance_down
         
     
     def get_transitions_to_state(self, state):
